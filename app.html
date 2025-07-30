@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./weather.css">
+</head>
+<body>
+    <div class="card">
+    <div class="card2">
+            <div class="search">
+                <input type="text" placeholder="enter city name" spellcheck="false">
+                <button><img src="./search.png" alt=""></button>
+            </div>
+            <div class="error">
+                <p>invalid city name</p>
+            </div>
+            <div class="weather">
+               
+                <img src="./cloudy .png" class="weather-img">
+                <h1 class="temp">22</h1>
+                <h2 class ="city">newyork</h2>
+
+        </div>
+    </div>
+    <div class="card3">
+      
+        
+        <div class="weather1">
+            <div class="datetime">
+                
+                <div class="dt">
+                    <h3 class="citys">newyork</h3>
+                <p class="time">2:42pm</p>
+                <p class="date">22-6-2025</p>
+                </div>
+                <div class="desc">
+                <h1 class="temps">22</h1>
+                <p class="weather-desc">cloudy</p>
+                </div> 
+            </div>
+            
+
+            <div class="details">
+            <div class="sub1">
+                <img src="./humidity.png" alt="">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>humidity</p>
+                </div>
+            </div>
+
+            <div class="sub1">
+                <img src="./wind (1).png" alt="">
+                <div>
+                    <p class="winds">50%</p>
+                    <p>wind speed</p>
+                </div>
+            </div>
+            <div class="sub1">
+                <img src="./resilience.png" alt="">
+                <div>
+                    <p class="pressure">50%</p>
+                    <p>pressure</p>
+                </div>
+            </div>
+          
+
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+   <script>
+    const apikey="5379e4331f0988b93f3fe4a5d076afd6";
+    const apiurl="https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+
+    const searchbox=document.querySelector(".search input");
+    const searchbtn=document.querySelector(".search button");
+    const weatherimg=document.querySelector(" .weather-img");
+    
+
+
+
+    async function checkWeather(city){
+        const response=await fetch(apiurl+city+`&appid=${apikey}`);
+          
+        if (response.status === 404) {
+            document.querySelector(".error").style.display = "block";
+            document.querySelector(".weather").style.display = "none";
+            document.querySelector(".card3").style.display = "none";
+            return;
+        }
+        var data=await response.json();
+        console.log(data);
+
+
+        document.querySelector(".city").innerHTML=data.name;
+        document.querySelector(".citys").innerHTML=data.name;
+        document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+'&deg;c';
+        document.querySelector(".temps").innerHTML=Math.round(data.main.temp)+'&deg;c';
+
+        document.querySelector(".humidity").innerHTML=data.main.humidity+"%";
+        document.querySelector(".pressure").innerHTML=data.main.pressure+"%";
+
+        document.querySelector(".winds").innerHTML=data.wind.speed+"km/h";
+        document.querySelector(".winds").innerHTML=data.wind.speed+"km/h";
+        document.querySelector(".weather-desc").innerHTML = data.weather[0].main;
+
+
+        const now = new Date();
+        const date = now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const time = now.toLocaleTimeString();
+        document.querySelector(".date").innerHTML = date;
+        document.querySelector(".time").innerHTML = time;
+
+        if(data.weather[0].main== "Clouds"){
+        weatherimg.src="./cloudy .png";
+        }
+        else if(data.weather[0].main== "Clear"){
+            weatherimg.src="./clear.png";
+        } 
+        else if(data.weather[0].main== "Rain"){
+            weatherimg.src="./rain.png";
+        }
+        else if(data.weather[0].main== "Drizzle"){
+            weatherimg.src="./drizzle.png";
+        }
+        else if(data.weather[0].main== "Mist"){
+            weatherimg.src="./mist.png";
+        }
+
+        document.querySelector(".weather").style.display="block";
+        document.querySelector(".card3").style.display="block";
+
+        document.querySelector(".error").style.display="block";
+
+
+    }
+    searchbtn.addEventListener("click",()=>{
+        checkWeather(searchbox.value);
+
+    })
+    
+    
+   </script>
+</body>
+</html>
